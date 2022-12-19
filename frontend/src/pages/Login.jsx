@@ -20,6 +20,11 @@ function Login() {
     draggable : true,
     theme : 'dark' ,
   };
+  useEffect(() => {
+    if(localStorage.getItem('chat-app-user')){
+      navigate("/chat");
+    }
+  },[]);
   const handelSubmit = async(event) =>{
     event.preventDefault();
    if(handelValidation()){
@@ -67,7 +72,7 @@ function Login() {
           <input type="text" name="username" placeholder='Enter Your Username' onChange={e=>handelChange(e)} min = "4"/>
           <input type="password" name="password" placeholder='Enter Your Password' onChange={e=>handelChange(e)}/>
           <button type='submit'>Login User</button>
-          <span>Not have an account ? <Link to="/register">Register</Link> </span>
+          <span>Don't have an account ? <Link to="/register">Register</Link> </span>
         </form>
       </FormContainer>
       <ToastContainer />

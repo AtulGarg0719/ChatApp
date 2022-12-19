@@ -8,6 +8,7 @@ import {
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Chat from "./pages/Chats";
+import SetAvatar from './pages/SetAvatar';
 
 export default function App() {
   return (
@@ -15,6 +16,7 @@ export default function App() {
       <Routes>
         <Route path='/register' element={<Register/>} />
         <Route path='/' element={<Login/>} />
+        <Route path='/setAvatar' element={<SetAvatar/>} />
         <Route path='/chat' element={<Chat/>} />
       </Routes>
     </Router>
