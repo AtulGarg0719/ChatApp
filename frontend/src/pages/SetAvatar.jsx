@@ -21,17 +21,21 @@ export default function SetAvatar() {
         draggable : true,
         theme : 'dark' ,
     };
+    useEffect(() => {
+      if(!localStorage.getItem('chat-app-user')){
+        navigate("/");
+      }
+    },[]);
     const setProfilePicture = async() =>{
       if(selectedAvatar === undefined){
       toast.error("Please Select avatar",toastOptions);
       }
       else{
         const user = await JSON.parse(localStorage.getItem("chat-app-user"));
-        const data = await axios.post(`${setAvatarRoute}/${user._id}`,{
+        const {data} = await axios.post(`${setAvatarRoute}/${user._id}`,{
           image : avatars[selectedAvatar],
         });
-        console.log(data);
-        if(data.isSet){
+        if (data.isSet){
           user.isAvatarImage = true;
           user.avatarImage = data.image;
           localStorage.getItem("chat-app-user",JSON.stringify(user));
