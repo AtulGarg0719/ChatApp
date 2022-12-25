@@ -83,7 +83,7 @@ function Register() {
           <input type="password" name="password" placeholder='Enter Your Password' onChange={e=>handelChange(e)}/>
           <input type="password" name="confrmpassword" placeholder='Enter Your Confirm Password' onChange={e=>handelChange(e)}/>
           <button type='submit'>Create User</button>
-          <span>Already have a account ? <Link to="/login">Login </Link> </span>
+          <span>Already have a account ? <Link to="/">Login </Link> </span>
         </form>
       </FormContainer>
       <ToastContainer />
