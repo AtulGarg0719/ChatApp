@@ -1,22 +1,40 @@
-import React,{useState,useEffect} from 'react';
+import React,{useState,useEffect,useRef} from 'react';
 import styled from 'styled-components';
 import axios from "axios";
-import {useNavigate } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import Contacts from '../components/Contacts';
-import { allUsersRoute } from '../utils/APIRoutes';
+import {allUsersRoute , host} from '../utils/APIRoutes';
+import Welcome from '../components/Welcome';
+import ChatContainer from '../components/ChatContainer';
+import {io} from 'socket.io-client';
+
 function Chats() {
+  const socket = useRef();
   const navigate = useNavigate();
   const [contacts,setContacts] = useState([]);
-  const [currentUser,setcurrentUser] = useState([]);
-  useEffect(async() => {
+  const [currentUser,setCurrentUser] = useState(undefined);
+  const [currentChat,setCurrentChat] = useState(undefined);
+  const [isloading,setIsLoading] = useState(false);
+
+  useEffect(() => {
+    (async function() {
     if(!localStorage.getItem('chat-app-user')){
       navigate("/");
     }
     else{
-      setcurrentUser(await JSON.parse(localStorage.getItem("chat-app-user")))
+      setCurrentUser(await JSON.parse(localStorage.getItem("chat-app-user")));
+      setIsLoading(true);
     }
+  })();
   },[]);
-  useEffect(async()=>{
+  useEffect(()=>{
+    if(currentUser){
+      socket.current = io(host);
+      socket.current.emit("add-user",currentUser._id);
+    }
+  },[currentUser])
+  useEffect(()=>{
+    (async function() {
     if(currentUser){
       if(currentUser.isAvatarImage){
         const data = await axios.get(`${allUsersRoute}/${currentUser._id}`);
@@ -25,12 +43,21 @@ function Chats() {
         navigate("/setAvatar");
       }
     }
+  })();
+  },[currentUser]);
+  const handelChatChange = (chat) =>{
+    setCurrentChat(chat);
 
-  },[setcurrentUser])
+  }
   return (
     <Container>
       <div className="container">
-        <Contacts contacts={contacts} currentUser={currentUser}/>
+        <Contacts contacts={contacts} currentUser={currentUser} changeChat = {handelChatChange}/>
+        {isloading && currentChat === undefined ?
+        (<Welcome currentUser={currentUser}/>) :
+        (<ChatContainer currentChat={currentChat} currentUser={currentUser} socket={socket}/>)
+
+        }
       </div>
     </Container>
   )

@@ -20,6 +20,7 @@ function Login() {
     draggable : true,
     theme : 'dark' ,
   };
+  // Local Stroage is at application section in inspect
   useEffect(() => {
     if(localStorage.getItem('chat-app-user')){
       navigate("/chat");
